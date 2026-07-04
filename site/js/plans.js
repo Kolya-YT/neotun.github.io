@@ -40,7 +40,7 @@ function renderPlans(grid, plans) {
     const months = p.months || 1;
     const price = Math.round(p.price);
     const ppm = perMonthPrice(p.price, months);
-    const buyHref = isLoggedIn ? '/app/' : '/login.html?plan=' + p.plan_id;
+    const buyHref = isLoggedIn ? 'https://app.neotun.ru/' : '/login.html?plan=' + p.plan_id;
     const buyLabel = isLoggedIn ? 'Купить' : 'Войти и купить';
 
     // Savings badge for multi-month plans

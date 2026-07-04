@@ -425,7 +425,7 @@
         <div class="footer-nav-group">
           <div class="footer-nav-title">Аккаунт</div>
           <a href="login.html">Войти</a>
-          <a href="/app/">Личный кабинет</a>
+          <a href="https://app.neotun.ru/">Личный кабинет</a>
         </div>
       </div>
     </div>
@@ -472,6 +472,15 @@
       if (el && d.server_count > 0) el.textContent = d.server_count;
     })
     .catch(() => {});
+
+  // Mini-app URL for logged-in users
+  if (localStorage.getItem('jwt_token')) {
+    document.querySelectorAll('.hero-cta, .cta-btn, .navbar-login-btn, .mobile-login-link').forEach(el => {
+      if (el.tagName === 'A' && (el.getAttribute('href') === 'login.html' || el.getAttribute('href') === '#cta')) {
+        el.href = 'https://app.neotun.ru/';
+      }
+    });
+  }
 </script>
 </body>
 </html>
