@@ -3,6 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#050510">
   <title>Подтверждение — NeoTUN</title>
   <link rel="stylesheet" href="css/style.css">
   <meta name="robots" content="noindex, nofollow">
@@ -49,7 +50,7 @@
     const btn = document.getElementById('btn-verify');
     btn.classList.add('btn-loading'); btn.disabled = true;
     try {
-      const r = await fetch('https://app.neotun.ru/auth/email/verify', {
+      const r = await fetch('/auth/email/verify', {
         method: 'POST', headers: {'Content-Type':'application/json'},
         body: JSON.stringify({ email, code })
       });
@@ -57,7 +58,7 @@
       if (d.ok) {
         localStorage.setItem('jwt_token', d.token);
         sessionStorage.removeItem('otp_email');
-        window.location.href = 'https://app.neotun.ru/';
+        window.location.href = '/app/';
       } else {
         const msgs = { invalid:'Неверный код', expired:'Код истёк', max_attempts:'Слишком много попыток', blocked:'Временная блокировка' };
         errEl.textContent = msgs[d.error] || 'Ошибка: ' + d.error;
