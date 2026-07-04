@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NeoTUN</title>
+<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/dist/tabler-icons.min.css">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+.wrap{background:#0d0b1e;border-radius:28px;padding:20px 16px 92px;max-width:360px;margin:0 auto;min-height:740px;position:relative;overflow:hidden;font-family:var(--font-sans)}
+.bg-blob{position:absolute;border-radius:50%;filter:blur(60px);pointer-events:none}
+.blob1{width:220px;height:220px;background:rgba(120,60,220,0.35);top:-60px;left:-40px}
+.blob2{width:180px;height:180px;background:rgba(80,140,255,0.2);top:80px;right:-50px}
+.blob3{width:160px;height:160px;background:rgba(180,60,255,0.15);bottom:140px;left:20px}
+.z1{position:relative;z-index:1}
+
+.header{display:flex;align-items:center;justify-content:space-between;margin-bottom:20px}
+.user-row{display:flex;align-items:center;gap:10px}
+.avatar{width:42px;height:42px;border-radius:50%;background:linear-gradient(135deg,#7c3aed,#3b82f6);display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:500;color:#fff;border:1.5px solid rgba(255,255,255,0.2)}
+.user-name{font-size:15px;font-weight:500;color:#fff}
+.user-since{font-size:11px;color:rgba(255,255,255,0.4);margin-top:1px}
+.header-right{display:flex;gap:8px}
+.icon-btn{width:36px;height:36px;border-radius:50%;background:rgba(255,255,255,0.07);border:0.5px solid rgba(255,255,255,0.12);display:flex;align-items:center;justify-content:center;cursor:pointer}
+.icon-btn .ti{font-size:17px;color:rgba(255,255,255,0.6)}
+.admin-btn{background:rgba(124,58,237,0.2);border-color:rgba(167,139,250,0.3)}
+.admin-btn .ti{color:#a78bfa}
+
+.balance-card{background:rgba(255,255,255,0.07);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:0.5px solid rgba(255,255,255,0.15);border-radius:22px;padding:20px;margin-bottom:10px;position:relative;overflow:hidden}
+.balance-card::before{content:'';position:absolute;inset:0;background:linear-gradient(135deg,rgba(124,58,237,0.12),rgba(59,130,246,0.08));pointer-events:none}
+.balance-label{font-size:11px;color:rgba(255,255,255,0.4);text-transform:uppercase;letter-spacing:0.8px;margin-bottom:6px}
+.balance-amount{font-size:38px;font-weight:500;color:#fff;margin-bottom:16px;letter-spacing:-0.5px}
+.balance-amount span{font-size:22px;color:rgba(255,255,255,0.45);margin-left:3px}
+.balance-btns{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.btn-primary{background:linear-gradient(135deg,#7c3aed,#5b21b6);border:none;border-radius:12px;padding:13px;color:#fff;font-size:14px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
+.btn-secondary{background:rgba(255,255,255,0.08);border:0.5px solid rgba(255,255,255,0.15);border-radius:12px;padding:13px;color:#fff;font-size:14px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px;cursor:pointer}
+.btn-primary .ti,.btn-secondary .ti{font-size:16px}
+
+.mini-stats{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-bottom:10px}
+.mini-card{background:rgba(255,255,255,0.06);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:0.5px solid rgba(255,255,255,0.1);border-radius:16px;padding:14px}
+.mini-icon{width:28px;height:28px;border-radius:8px;display:flex;align-items:center;justify-content:center;margin-bottom:8px;font-size:15px}
+.ip{background:rgba(124,58,237,0.25);color:#a78bfa}
+.ig{background:rgba(16,185,129,0.2);color:#34d399}
+.mini-value{font-size:18px;font-weight:500;color:#fff}
+.mini-label{font-size:11px;color:rgba(255,255,255,0.4);margin-top:2px}
+
+.actions-label{font-size:11px;color:rgba(255,255,255,0.35);text-transform:uppercase;letter-spacing:0.7px;margin-bottom:8px}
+.actions-row{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:10px}
+.action-item{background:rgba(255,255,255,0.06);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:0.5px solid rgba(255,255,255,0.1);border-radius:14px;padding:13px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;cursor:pointer}
+.action-item .ti{font-size:20px;color:rgba(255,255,255,0.55)}
+.action-lbl{font-size:11px;color:rgba(255,255,255,0.45);text-align:center;line-height:1.3}
+
+.ref-card{background:rgba(255,255,255,0.05);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);border:0.5px solid rgba(255,255,255,0.1);border-radius:16px;padding:14px;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.ref-left{flex:1;min-width:0}
+.ref-title{font-size:11px;color:rgba(255,255,255,0.35);margin-bottom:4px}
+.ref-link{font-size:12px;color:#a78bfa;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.ref-badge{background:rgba(124,58,237,0.25);border:0.5px solid rgba(167,139,250,0.3);color:#c4b5fd;font-size:11px;padding:4px 10px;border-radius:8px;white-space:nowrap;font-weight:500;flex-shrink:0}
+
+.bottomnav{position:absolute;bottom:0;left:0;right:0;background:rgba(13,11,30,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border-top:0.5px solid rgba(255,255,255,0.08);border-radius:0 0 28px 28px;display:flex;padding:10px 0 18px}
+.nav-item{flex:1;display:flex;flex-direction:column;align-items:center;gap:3px;cursor:pointer}
+.nav-item .ti{font-size:21px;color:rgba(255,255,255,0.28)}
+.nav-item.active .ti{color:#a78bfa}
+.nav-dot{width:4px;height:4px;border-radius:50%;background:transparent;margin-top:1px}
+.nav-item.active .nav-dot{background:#a78bfa}
+.nav-lbl{font-size:10px;color:rgba(255,255,255,0.28);margin-top:1px}
+.nav-item.active .nav-lbl{color:#a78bfa}
+.nav-item.admin-nav .ti{color:rgba(167,139,250,0.5)}
+.nav-item.admin-nav .nav-lbl{color:rgba(167,139,250,0.5)}
+</style>
+</head>
+<body>
+<script>Telegram.WebApp.ready();</script>
+
+<div class="wrap">
+  <div class="bg-blob blob1"></div>
+  <div class="bg-blob blob2"></div>
+  <div class="bg-blob blob3"></div>
+
+  <!-- HEADER -->
+  <div class="header z1">
+    <div class="user-row">
+      <div class="avatar">{{ initials }}</div>
+      <div>
+        <div class="user-name">{{ username }}</div>
+        <div class="user-since">С {{ member_since }}</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <div class="icon-btn"><i class="ti ti-bell" aria-hidden="true"></i></div>
+      {% if is_admin %}
+      <div class="icon-btn admin-btn" title="Админ-панель"><i class="ti ti-shield" aria-hidden="true"></i></div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- BALANCE -->
+  <div class="balance-card z1">
+    <div class="balance-label">Баланс</div>
+    <div class="balance-amount">{{ balance }} <span>₽</span></div>
+    <div class="balance-btns">
+      <button class="btn-primary"><i class="ti ti-plus" aria-hidden="true"></i> Пополнить</button>
+      <button class="btn-secondary"><i class="ti ti-key" aria-hidden="true"></i> Купить ключ</button>
+    </div>
+  </div>
+
+  <!-- MINI STATS -->
+  <div class="mini-stats z1">
+    <div class="mini-card">
+      <div class="mini-icon ip"><i class="ti ti-key" aria-hidden="true"></i></div>
+      <div class="mini-value">{{ active_keys }}</div>
+      <div class="mini-label">Активных ключей</div>
+    </div>
+    <div class="mini-card">
+      <div class="mini-icon ig"><i class="ti ti-chart-bar" aria-hidden="true"></i></div>
+      <div class="mini-value">{{ total_spent }} ₽</div>
+      <div class="mini-label">Потрачено всего</div>
+    </div>
+  </div>
+
+  <!-- QUICK ACTIONS -->
+  <div class="z1">
+    <div class="actions-label">Действия</div>
+    <div class="actions-row">
+      <div class="action-item">
+        <i class="ti ti-receipt" aria-hidden="true"></i>
+        <div class="action-lbl">История платежей</div>
+      </div>
+      <div class="action-item">
+        <i class="ti ti-users" aria-hidden="true"></i>
+        <div class="action-lbl">Рефералы</div>
+      </div>
+      <div class="action-item">
+        <i class="ti ti-book" aria-hidden="true"></i>
+        <div class="action-lbl">Гайд подключения</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REFERRAL -->
+  <div class="ref-card z1">
+    <div class="ref-left">
+      <div class="ref-title">Реферальная программа</div>
+      <div class="ref-link">{{ ref_link }}</div>
+    </div>
+    <div class="ref-badge">{{ ref_level }} · {{ ref_percent }}%</div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bottomnav">
+    <div class="nav-item active">
+      <i class="ti ti-home"></i>
+      <div class="nav-lbl">Главная</div>
+      <div class="nav-dot"></div>
+    </div>
+    <div class="nav-item">
+      <i class="ti ti-key"></i>
+      <div class="nav-lbl">Подписки</div>
+      <div class="nav-dot"></div>
+    </div>
+    <div class="nav-item">
+      <i class="ti ti-headset"></i>
+      <div class="nav-lbl">Поддержка</div>
+      <div class="nav-dot"></div>
+    </div>
+    <div class="nav-item">
+      <i class="ti ti-settings"></i>
+      <div class="nav-lbl">Настройки</div>
+      <div class="nav-dot"></div>
+    </div>
+    {% if is_admin %}
+    <div class="nav-item admin-nav">
+      <i class="ti ti-shield"></i>
+      <div class="nav-lbl">Админ</div>
+      <div class="nav-dot"></div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+</body>
+</html>
