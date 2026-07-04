@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Войти — NeoTUN</title>
+  <meta name="robots" content="noindex, nofollow">
+  <meta name="theme-color" content="#050510">
+  <link rel="preload" href="css/style.css" as="style">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<nav class="navbar">
+  <a class="navbar-brand" href="/">Neo<span>TUN</span></a>
+  <a href="/" class="btn btn-ghost" style="font-size:13.5px;gap:6px;color:var(--text3)">
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+      <path d="M19 12H5M12 5l-7 7 7 7"/>
+    </svg>
+    На главную
+  </a>
+</nav>
+
+<main>
+  <div class="auth-page">
+    <div class="auth-card" id="auth-card">
+
+      <!-- Step 1: choose method -->
+      <div id="step-choose">
+        <div class="auth-logo">Neo<span>TUN</span></div>
+        <h2>Войти в кабинет</h2>
+        <p class="auth-sub">Выберите удобный способ входа</p>
+
+        <!-- Telegram button (shown when inside Telegram) -->
+        <button class="btn btn-primary btn-full btn-lg" id="btn-tg-open" style="display:none;margin-bottom:12px">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" style="flex-shrink:0">
+            <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+          </svg>
+          Открыть в Telegram
+        </button>
+
+        <!-- Telegram Login Widget -->
+        <div id="tg-widget-wrap" style="display:block;margin-bottom:12px;min-height:48px">
+          <div id="tg-login-widget"></div>
+        </div>
+
+        <div class="auth-divider"><span>или</span></div>
+
+        <button class="btn btn-outline btn-full btn-lg" id="btn-email-start">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0">
+            <rect x="2" y="4" width="20" height="16" rx="2"/>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/>
+          </svg>
+          Войти по Email
+        </button>
+
+        <p class="auth-terms">
+          Продолжая, вы принимаете
+          <a href="https://telegra.ph/PUBLICHNAYA-OFERTA-11-05-8" target="_blank" rel="noopener">условия использования</a>
+        </p>
+      </div>
+
+      <!-- Step 2: email input -->
+      <div id="step-email" class="hidden">
+        <button class="btn-back" id="btn-back-email">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+          Назад
+        </button>
+        <h2>Введите Email</h2>
+        <p class="auth-sub">Отправим код подтверждения на вашу почту</p>
+        <div id="email-error" class="code-error hidden"></div>
+        <div class="code-input-wrap">
+          <input
+            type="email"
+            id="email-input"
+            class="code-input"
+            style="font-size:17px;letter-spacing:0;text-align:left;padding:15px 16px"
+            placeholder="you@example.com"
+            autocomplete="email"
+            inputmode="email"
+          />
+        </div>
+        <button class="btn btn-primary btn-full btn-lg" id="btn-send-otp">
+          Получить код →
+        </button>
+      </div>
+
+      <!-- Step 3: OTP verify -->
+      <div id="step-otp" class="hidden">
+        <button class="btn-back" id="btn-back-otp">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+          Назад
+        </button>
+        <h2>Введите код</h2>
+        <p class="auth-sub">Код отправлен на <strong id="otp-email"></strong></p>
+        <div id="otp-error" class="code-error hidden"></div>
+        <div class="code-input-wrap">
+          <input
+            type="text"
+            id="otp-input"
+            class="code-input"
+            placeholder="——————"
+            maxlength="6"
+            pattern="\d{6}"
+            autocomplete="one-time-code"
+            inputmode="numeric"
+          />
+          <div class="code-hint">6 цифр · Действует 10 минут</div>
+        </div>
+        <button class="btn btn-primary btn-full btn-lg" id="btn-verify-otp">
+          Войти →
+        </button>
+        <button class="btn btn-ghost btn-full" id="btn-resend" style="margin-top:10px" disabled>
+          Отправить повторно (<span id="resend-timer">60</span>с)
+        </button>
+      </div>
+
+    </div>
+  </div>
+</main>
+
+<div id="toast" class="toast"></div>
+<script src="js/main.js"></script>
+<script src="js/auth.js"></script>
+</body>
+</html>
