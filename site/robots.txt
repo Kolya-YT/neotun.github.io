@@ -3,4 +3,4 @@ Allow: /
 Disallow: /login.html
 Disallow: /verify.html
 
-Sitemap: /sitemap.xml
+Sitemap: https://neotun.ru/sitemap.xml

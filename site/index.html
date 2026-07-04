@@ -465,7 +465,7 @@
   })();
 
   // Live server count
-  fetch('/api/v1/bot-info')
+  fetch('https://app.neotun.ru/api/v1/bot-info')
     .then(r => r.json())
     .then(d => {
       const el = document.getElementById('stat-servers');

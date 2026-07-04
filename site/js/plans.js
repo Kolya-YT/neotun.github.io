@@ -104,7 +104,7 @@ async function loadPlans() {
   try {
     const token = localStorage.getItem('jwt_token');
     const headers = token ? { Authorization: `Bearer ${token}` } : {};
-    const r = await fetch('/api/v1/plans', { headers });
+    const r = await fetch('https://app.neotun.ru/api/v1/plans', { headers });
     if (!r.ok) throw new Error('api error');
     const d = await r.json();
     renderPlans(grid, d.plans || []);
