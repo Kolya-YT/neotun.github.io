@@ -1,0 +1,5 @@
+# Netlify redirects — proxy API/auth to the Flask backend
+/api/*      https://app.neotun.ru/api/:splat     200
+/auth/*     https://app.neotun.ru/auth/:splat     200
+/app/*      https://app.neotun.ru/app/:splat     200
+/health     https://app.neotun.ru/api/v1/health   200
