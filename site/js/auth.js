@@ -4,6 +4,9 @@ const BASE = 'https://app.neotun.ru';
 const API = BASE + '/api/v1';
 const APP_URL = BASE + '/';
 
+const _planParam = new URLSearchParams(window.location.search).get('plan') || '';
+const _planHash = _planParam ? '&plan=' + encodeURIComponent(_planParam) : '';
+
 const steps = {
   choose: document.getElementById('step-choose'),
   email:  document.getElementById('step-email'),
@@ -13,6 +16,12 @@ const steps = {
 function showStep(name) {
   Object.values(steps).forEach(s => s?.classList.add('hidden'));
   steps[name]?.classList.remove('hidden');
+  const progress = { choose: 33, email: 66, otp: 100 };
+  const fill = document.getElementById('auth-steps-fill');
+  const label = document.getElementById('auth-steps-label');
+  const stepNum = { choose: 1, email: 2, otp: 3 };
+  if (fill) { fill.style.width = (progress[name] || 0) + '%'; }
+  if (label) { label.textContent = 'Шаг ' + (stepNum[name] || 1) + ' из 3'; }
 }
 
 // ── Telegram Login ────────────────────────────────────────────────────────────
@@ -25,7 +34,7 @@ function showStep(name) {
   const jwt = urlParams.get('jwt');
   if (jwt) {
     localStorage.setItem('jwt_token', jwt);
-    window.location.href = APP_URL + '#jwt=' + encodeURIComponent(jwt);
+    window.location.href = APP_URL + '#jwt=' + encodeURIComponent(jwt) + _planHash;
     return;
   }
   const err = urlParams.get('error');
@@ -90,7 +99,7 @@ function showStep(name) {
             const d = await r.json().catch(() => ({}));
             if (d.ok) {
               localStorage.setItem('jwt_token', d.token);
-              window.location.href = APP_URL + '#jwt=' + encodeURIComponent(d.token);
+              window.location.href = APP_URL + '#jwt=' + encodeURIComponent(d.token) + _planHash;
             } else {
               showToast('Ошибка: ' + (d.error || 'unknown'), 'error');
             }
@@ -133,7 +142,7 @@ window.onTelegramAuth = async function(user) {
     const d = await r.json().catch(() => ({}));
     if (d.ok) {
       localStorage.setItem('jwt_token', d.token);
-      window.location.href = APP_URL + '#jwt=' + encodeURIComponent(d.token);
+      window.location.href = APP_URL + '#jwt=' + encodeURIComponent(d.token) + _planHash;
     } else {
       showToast('Ошибка: ' + (d.error || 'unknown'), 'error');
     }
@@ -150,7 +159,7 @@ async function loginWithTelegram(initData) {
     const d = await r.json();
     if (d.ok) {
       localStorage.setItem('jwt_token', d.token);
-      window.location.href = APP_URL + '#jwt=' + encodeURIComponent(d.token);
+      window.location.href = APP_URL + '#jwt=' + encodeURIComponent(d.token) + _planHash;
     } else {
       showToast('Ошибка Telegram-авторизации: ' + d.error, 'error');
     }
@@ -237,7 +246,7 @@ async function verifyOtp() {
     const d = await r.json();
     if (d.ok) {
       localStorage.setItem('jwt_token', d.token);
-      window.location.href = APP_URL + '#jwt=' + encodeURIComponent(d.token);
+      window.location.href = APP_URL + '#jwt=' + encodeURIComponent(d.token) + _planHash;
     } else {
       const msgs = {
         invalid: 'Неверный код', expired: 'Код истёк — запросите новый',
