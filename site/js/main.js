@@ -1,5 +1,51 @@
 'use strict';
 
+/* ── Header height → CSS var (keeps Hero below sticky navbar on every layout) ── */
+(function () {
+  const nav = document.querySelector('.navbar');
+  if (!nav) return;
+  const apply = () => {
+    const h = Math.round(nav.getBoundingClientRect().height);
+    if (h > 0) document.documentElement.style.setProperty('--header-h', h + 'px');
+  };
+  apply();
+  window.addEventListener('resize', apply);
+  window.addEventListener('orientationchange', apply);
+  // React to layout shifts (DevTools open, font load, mobile menu toggle).
+  if (window.ResizeObserver) new ResizeObserver(apply).observe(nav);
+  // Re-check after fonts/layout settle.
+  window.addEventListener('load', apply);
+  if (document.fonts && document.fonts.ready) document.fonts.ready.then(apply);
+})();
+
+/* ── OS Detection ─────────────────────────────────────────────────────────── */
+const NEOTUN_OS = (() => {
+  const u = navigator.userAgent;
+  if (/Windows/.test(u)) return 'windows';
+  if (/Android/.test(u)) return 'android';
+  if (/iPhone|iPad|iPod/.test(u)) return 'ios';
+  if (/Mac OS X/.test(u)) return 'macos';
+  if (/Linux/.test(u)) return 'linux';
+  return 'unknown';
+})();
+window.NEOTUN_OS = NEOTUN_OS;
+
+(function () {
+  const banner = document.querySelector('.os-detect-banner');
+  if (!banner || NEOTUN_OS === 'unknown') return;
+  const labels = { windows: 'Windows', android: 'Android', ios: 'iOS', macos: 'macOS', linux: 'Linux' };
+  const urls = {
+    windows: '/download/', android: '/download/', ios: '/download/', macos: '/download/', linux: '/download/'
+  };
+  const name = labels[NEOTUN_OS];
+  if (!name) return;
+  const nEl = banner.querySelector('.os-name');
+  const lEl = banner.querySelector('.os-link');
+  if (nEl) nEl.textContent = name;
+  if (lEl) lEl.href = urls[NEOTUN_OS] || '/download/';
+  banner.classList.add('visible');
+})();
+
 /* ── Navbar scroll ────────────────────────────────────────────────────────── */
 (function () {
   const nav = document.querySelector('.navbar');

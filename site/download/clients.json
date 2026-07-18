@@ -1,0 +1,132 @@
+{
+  "version": 2,
+  "updated": "2026-07-19",
+  "note": "NeoTUN — это сервис, совместимый с открытыми клиентами. Все приложения скачиваются ТОЛЬКО напрямую из официальных GitHub Releases их разработчиков. Добавление приложения = один объект в массиве apps[]. HTML и JS менять не нужно: система сама выбирает подходящий asset по маскам assetPatterns.",
+  "platforms": {
+    "windows": { "label": "Windows", "arch": "64-bit / ARM64" },
+    "android": { "label": "Android", "arch": "ARM / x86" },
+    "linux":   { "label": "Linux",  "arch": "AppImage / deb / rpm" },
+    "macos":   { "label": "macOS",  "arch": "Apple Silicon / Intel" },
+    "ios":     { "label": "iOS",    "arch": "iPhone / iPad" },
+    "tv":      { "label": "TV",     "arch": "Apple TV / Android TV" },
+    "tv-android": { "label": "TV Android", "arch": "Android TV" }
+  },
+  "apps": [
+    {
+      "id": "incy",
+      "name": "INCY",
+      "status": "recommended",
+      "description": "Открытый кроссплатформенный клиент на базе Xray-core.",
+      "repository": "INCY-DEV/incy-platforms",
+      "website": "https://github.com/INCY-DEV/incy-platforms",
+      "documentation": "https://github.com/INCY-DEV/incy-platforms",
+      "platforms": {
+        "windows": { "assetPatterns": ["*.exe", "*.msi", "*.zip"] },
+        "android": { "assetPatterns": ["*.apk"] },
+        "linux":   { "assetPatterns": ["*.AppImage", "*.deb", "*.rpm", "*.pkg.tar.zst", "*.tar.zst", "*.zip"] },
+        "macos":   { "assetPatterns": ["*.dmg", "*.pkg", "*.zip"] },
+        "ios":     { "store": "https://apps.apple.com/ru/app/incy/id6756943388", "storeLabel": "App Store" }
+      }
+    },
+    {
+      "id": "happ",
+      "name": "Happ",
+      "status": "new",
+      "description": "Минималистичный клиент с понятным интерфейсом для всех платформ.",
+      "repository": "happ-proxy/happ-desktop",
+      "website": "https://github.com/happ-proxy",
+      "documentation": "https://github.com/happ-proxy",
+      "platforms": {
+        "windows": { "assetPatterns": ["setup-Happ*.exe", "*.exe", "*.msi"] },
+        "android": { "repository": "happ-proxy/happ-android", "assetPatterns": ["Happ*.apk"] },
+        "linux":   { "assetPatterns": ["Happ.linux*.deb", "Happ.linux*.rpm", "Happ.linux*.pkg.tar.zst"] },
+        "macos":   { "store": "https://apps.apple.com/us/app/happ-proxy-utility/id6504287215?platform=mac", "storeLabel": "App Store" },
+        "ios":     { "store": "https://apps.apple.com/us/app/happ-proxy-utility/id6504287215?platform=iphone", "storeLabel": "App Store" },
+        "tv":      { "store": "https://apps.apple.com/us/app/happ-proxy-utility-for-tv/id6748297274", "storeLabel": "App Store (Apple TV)" },
+        "tv-android": { "store": "https://play.google.com/store/apps/details?id=com.happproxy", "storeLabel": "Google Play" }
+      }
+    },
+    {
+      "id": "hiddify",
+      "name": "Hiddify",
+      "status": "popular",
+      "description": "Мощный клиент с красивым интерфейсом и множеством протоколов.",
+      "repository": "hiddify/hiddify-app",
+      "website": "https://github.com/hiddify/hiddify-app",
+      "documentation": "https://github.com/hiddify/hiddify-app",
+      "platforms": {
+        "windows": { "assetPatterns": ["Hiddify-Windows-Setup*.exe", "Hiddify-Windows*.msix", "Hiddify-Windows-Portable*.zip", "*.exe", "*.msi", "*.zip"] },
+        "android": { "assetPatterns": ["Hiddify-Android*.apk", "*.apk"] },
+        "linux":   { "assetPatterns": ["Hiddify-Debian*.deb", "Hiddify-Linux*.AppImage", "Hiddify-Linux*.tar.gz", "*.AppImage", "*.deb", "*.rpm", "*.tar.gz", "*.zip"] },
+        "macos":   { "assetPatterns": ["Hiddify-MacOS*.dmg", "Hiddify-MacOS*.pkg", "*.dmg", "*.pkg", "*.zip"] },
+        "ios":     { "assetPatterns": ["Hiddify-iOS*.ipa", "*.ipa"] }
+      }
+    },
+    {
+      "id": "sing-box",
+      "name": "Sing-box",
+      "status": "new",
+      "description": "Универсальный сетевой движок и клиент с тонкими настройками.",
+      "repository": "SagerNet/sing-box",
+      "website": "https://github.com/SagerNet/sing-box",
+      "documentation": "https://sing-box.sagernet.org",
+      "platforms": {
+        "windows": { "assetPatterns": ["*.zip", "*.exe", "*.msi"] },
+        "android": { "assetPatterns": ["SFA-*.apk"] },
+        "linux":   { "assetPatterns": ["*.tar.gz", "*.deb", "*.zip"] },
+        "macos":   { "assetPatterns": ["*.tar.gz", "*.zip", "*.dmg"] }
+      }
+    },
+    {
+      "id": "v2rayng",
+      "name": "v2rayNG",
+      "description": "Популярный Android-клиент на движке V2Ray.",
+      "repository": "2dust/v2rayNG",
+      "website": "https://github.com/2dust/v2rayNG",
+      "documentation": "https://github.com/2dust/v2rayNG",
+      "platforms": {
+        "android": { "assetPatterns": ["v2rayNG*.apk"] }
+      }
+    },
+    {
+      "id": "v2rayn",
+      "name": "v2rayN",
+      "description": "Классический клиент для Windows и Linux на движке V2Ray.",
+      "repository": "2dust/v2rayN",
+      "website": "https://github.com/2dust/v2rayN",
+      "documentation": "https://github.com/2dust/v2rayN",
+      "platforms": {
+        "windows": { "assetPatterns": ["*.zip", "*.exe", "*.7z"] },
+        "linux":   { "assetPatterns": ["*.deb", "*.zip"] }
+      }
+    },
+    {
+      "id": "nekoray",
+      "name": "Nekoray",
+      "description": "Клиент на Sing-box и V2Ray для Windows и Linux.",
+      "repository": "MatsuriDayo/nekoray",
+      "website": "https://github.com/MatsuriDayo/nekoray",
+      "documentation": "https://github.com/MatsuriDayo/nekoray",
+      "platforms": {
+        "windows": { "assetPatterns": ["*windows*.zip", "*.exe", "*.msi"] },
+        "linux":   { "assetPatterns": ["*.AppImage", "*.deb", "*.zip"] }
+      }
+    }
+  ],
+  "help": {
+    "steps": [
+      { "n": 1, "title": "Войдите в личный кабинет NeoTUN", "text": "Авторизуйтесь через Telegram или Email в приложении или на сайте." },
+      { "n": 2, "title": "Выберите тариф", "text": "Начните с бесплатного или выберите платный тариф в кабинете." },
+      { "n": 3, "title": "Выберите совместимое приложение", "text": "Скачайте официальную сборку для своей платформы из GitHub Releases." },
+      { "n": 4, "title": "Добавьте подписку", "text": "Импортируйте ссылку подписки из кабинета в приложение автоматически или вручную." },
+      { "n": 5, "title": "Подключитесь", "text": "Выберите сервер и нажмите «Подключить»." }
+    ],
+    "faq": [
+      { "q": "Какое приложение выбрать?", "a": "Для большинства подойдёт INCY или Hiddify — они кроссплатформенные и поддерживают все нужные протоколы. На Android удобен v2rayNG или Sing-box." },
+      { "q": "Откуда скачиваются приложения?", "a": "Все приложения скачиваются напрямую из официальных GitHub Releases их разработчиков. NeoTUN лишь подбирает нужный файл — вы получаете оригинальную сборку без изменений." },
+      { "q": "Почему скачивание идёт через GitHub?", "a": "Потому что эти приложения разрабатываются независимыми авторами и распространяются через GitHub Releases. Так вы всегда получаете последнюю официальную версию." },
+      { "q": "Что делать, если для платформы нет сборки?", "a": "Откройте страницу релизов на GitHub вручную по ссылке из уведомления — возможно, сборка появится в следующем релизе." },
+      { "q": "Как добавить подписку NeoTUN?", "a": "После входа через Telegram или Email откройте личный кабинет, скопируйте ссылку подписки и импортируйте её в выбранное приложение." }
+    ]
+  }
+}
