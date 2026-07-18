@@ -474,10 +474,12 @@
     .catch(() => {});
 
   // Mini-app URL for logged-in users
-  if (localStorage.getItem('jwt_token')) {
-    document.querySelectorAll('.hero-cta, .cta-btn, .navbar-login-btn, .mobile-login-link').forEach(el => {
+  var _jwt = localStorage.getItem('jwt_token');
+  if (_jwt) {
+    var _miniUrl = 'https://app.neotun.ru/#jwt=' + encodeURIComponent(_jwt);
+    document.querySelectorAll('.hero-cta, .cta-btn, .navbar-login-btn, .mobile-login-link').forEach(function(el) {
       if (el.tagName === 'A' && (el.getAttribute('href') === 'login.html' || el.getAttribute('href') === '#cta')) {
-        el.href = 'https://app.neotun.ru/';
+        el.href = _miniUrl;
       }
     });
   }
