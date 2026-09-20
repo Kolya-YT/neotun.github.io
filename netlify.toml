@@ -1,9 +1,6 @@
 [build]
   publish = "site"
 
-[build.environment]
-  NPM_FLAGS = "--version"
-
 [[headers]]
   for = "/*.html"
   [headers.values]
