@@ -1,5 +1,3 @@
 User-agent: *
 Allow: /
-Disallow: /login.html
-
 Sitemap: https://neotun.ru/sitemap.xml
