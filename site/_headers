@@ -1,0 +1,11 @@
+/login.html
+  X-Robots-Tag: noindex, nofollow
+
+/api/*
+  X-Robots-Tag: noindex, nofollow
+
+/auth/*
+  X-Robots-Tag: noindex, nofollow
+
+/app/*
+  X-Robots-Tag: noindex, nofollow
