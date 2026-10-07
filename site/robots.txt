@@ -1,3 +1,8 @@
 User-agent: *
 Allow: /
+Disallow: /login.html
+Disallow: /api/
+Disallow: /auth/
+Disallow: /app/
+
 Sitemap: https://neotun.ru/sitemap.xml
