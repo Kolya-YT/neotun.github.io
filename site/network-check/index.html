@@ -3,19 +3,35 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <meta name="theme-color" content="#090b12">
+  <meta name="theme-color" content="#050510">
   <meta name="description" content="Проверка доступности локаций H1Cloud из вашей сети без подключения к сервису.">
-  <meta name="robots" content="noindex,follow">
+  <meta name="robots" content="index,follow">
+  <link rel="canonical" href="https://neotun.ru/network-check/">
   <title>Проверка доступности локаций — NeoTUN</title>
   <link rel="icon" href="/img/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/css/style.css">
   <link rel="stylesheet" href="/network-check/check.css">
 </head>
 <body>
-  <main class="shell">
-    <header class="topbar">
-      <a class="brand" href="/" aria-label="NeoTUN — главная"><span class="brand-mark">N</span><span>Neo<span class="brand-accent">TUN</span></span></a>
-      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Переключить тему">☼</button>
-    </header>
+  <main class="shell network-check-page">
+    <nav class="navbar" id="navbar">
+      <a class="navbar-brand" href="/">Neo<span>TUN</span></a>
+      <div class="navbar-links">
+        <a href="/">Главная</a>
+        <a href="/download/">Приложения</a>
+        <a class="active" href="/network-check/">Проверка локаций</a>
+        <a href="https://t.me/NeoTunl" target="_blank" rel="noopener" class="navbar-channel-btn">Новости</a>
+        <a href="/login.html" class="btn btn-primary navbar-login-btn">Войти →</a>
+      </div>
+      <button class="navbar-menu-btn" aria-label="Открыть меню"><span></span><span></span><span></span></button>
+      <div class="navbar-mobile-menu">
+        <a href="/">Главная</a>
+        <a href="/download/">Приложения</a>
+        <a href="/network-check/">Проверка локаций</a>
+        <a href="https://t.me/NeoTunl" target="_blank" rel="noopener">📢 Наши новости</a>
+        <a href="/login.html" class="mobile-login-link">Войти →</a>
+      </div>
+    </nav>
 
     <section class="intro">
       <div class="eyebrow"><i></i> ДИАГНОСТИКА ДОСТУПНОСТИ</div>
