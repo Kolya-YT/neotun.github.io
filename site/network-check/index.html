@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#050510">
-  <meta name="description" content="Проверка доступности серверных локаций из вашей сети без подключения к сервису.">
+  <meta name="description" content="Проверка доступности серверных локаций из вашей сети без подключения к сервису. С указанием источника списка локаций.">
   <meta name="robots" content="index,follow">
   <link rel="canonical" href="https://neotun.ru/network-check/">
   <title>Проверка доступности локаций — NeoTUN</title>
   <link rel="icon" href="/img/favicon.png" type="image/png">
   <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/network-check/check.css?v=20261110-5">
+  <link rel="stylesheet" href="/network-check/check.css?v=20261110-6">
 </head>
 <body>
   <nav class="navbar" id="navbar">
@@ -79,10 +79,11 @@
       <p><b>Заблокирована ТСПУ</b> — источник статусов сообщает о подтверждённой блокировке для российских сетей. Сам по себе тайм-аут браузера блокировку не доказывает.</p>
       <p><b>Перебои / Не удалось проверить</b> — источник сообщает о проблемах либо данных недостаточно для уверенного вывода.</p>
       <p class="disclaimer">Проверка показывает доступность из текущей сети и не гарантирует работу всех протоколов или приложений. Результат может отличаться у разных операторов.</p>
+      <p class="source-credit">Источник списка локаций и справочной информации о статусах — <a href="https://h1cloud.net/check" target="_blank" rel="noopener noreferrer">H1Cloud</a>. Проверка соединения и измерение времени отклика выполняются NeoTUN непосредственно в браузере посетителя. NeoTUN не связан с H1Cloud и не заявляет об официальном партнёрстве.</p>
     </section>
     <footer>NeoTUN · Диагностика сети</footer>
   </main>
   <script src="/js/main.js" defer></script>
-  <script src="/network-check/check.js?v=20261110-5" defer></script>
+  <script src="/network-check/check.js?v=20261110-6" defer></script>
 </body>
 </html>
