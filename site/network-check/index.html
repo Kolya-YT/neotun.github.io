@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#090b12">
+  <meta name="description" content="Проверка доступности локаций H1Cloud из вашей сети без подключения к сервису.">
+  <meta name="robots" content="noindex,follow">
+  <title>Проверка доступности локаций — NeoTUN</title>
+  <link rel="icon" href="/img/favicon.png" type="image/png">
+  <link rel="stylesheet" href="/network-check/check.css">
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="NeoTUN — главная"><span class="brand-mark">N</span><span>Neo<span class="brand-accent">TUN</span></span></a>
+      <button class="theme-toggle" id="themeToggle" type="button" aria-label="Переключить тему">☼</button>
+    </header>
+
+    <section class="intro">
+      <div class="eyebrow"><i></i> ДИАГНОСТИКА ДОСТУПНОСТИ</div>
+      <h1>Проверка доступности локаций</h1>
+      <p>Проверка выполняется из вашего обычного интернет-соединения — без подключения к сервису. Каждая локация проверяется непосредственно из браузера, а рядом отображается задержка до неё.</p>
+    </section>
+
+    <section class="actions">
+      <div class="action-buttons">
+        <button class="btn btn-primary" id="runCheck" type="button">Проверить ещё раз</button>
+        <button class="btn btn-secondary" id="copyResult" type="button" disabled>Скопировать результат</button>
+      </div>
+      <div class="progress-label" id="progressLabel">Загрузка списка…</div>
+    </section>
+
+    <div class="progress-track" aria-hidden="true"><div id="progressBar"></div></div>
+
+    <section class="stats" aria-live="polite">
+      <article class="stat"><strong class="green" id="availableCount">—</strong><span>доступно</span></article>
+      <article class="stat"><strong class="red" id="unavailableCount">—</strong><span>недоступно</span></article>
+      <article class="stat"><strong id="averagePing">—<small> мс</small></strong><span>средний пинг</span></article>
+      <article class="stat"><strong class="ip-value" id="visitorIp">Определяется…</strong><span>ваш IP</span></article>
+    </section>
+
+    <section class="results" aria-label="Результаты проверки">
+      <div class="results-heading"><span>Локации</span><span id="listMeta">—</span></div>
+      <div id="nodeList" class="node-list"><div class="empty-state">Получаем актуальный список локаций…</div></div>
+    </section>
+
+    <p class="updated" id="updatedAt"></p>
+    <section class="legend">
+      <h2>Как понимать результаты</h2>
+      <p><b>Доступна</b> — браузер смог установить соединение с адресом локации.</p>
+      <p><b>Недоступна</b> — адрес не ответил браузеру, а источник статусов также не подтверждает доступность.</p>
+      <p><b>Заблокирована ТСПУ</b> — источник статусов сообщает о подтверждённой блокировке для российских сетей. Сам по себе тайм-аут браузера блокировку не доказывает.</p>
+      <p><b>Перебои / Не удалось проверить</b> — источник сообщает о проблемах либо данных недостаточно для уверенного вывода.</p>
+      <p class="disclaimer">Проверка показывает доступность из текущей сети и не гарантирует работу всех протоколов или приложений. Результат может отличаться у разных операторов.</p>
+    </section>
+    <footer>NeoTUN · Диагностика сети</footer>
+  </main>
+  <script src="/network-check/check.js" defer></script>
+</body>
+</html>
