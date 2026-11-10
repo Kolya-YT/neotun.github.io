@@ -8,7 +8,7 @@
     average: $("averagePing"), ip: $("visitorIp"), list: $("nodeList"),
     meta: $("listMeta"), updated: $("updatedAt"), theme: $("themeToggle"),
   };
-  let nodes = [], results = [], visitorIp = "не определён", finished = false, running = false;
+  let nodes = [], results = [], visitorIp = "не определён", finished = false, running = false, statusSnapshot = null;
 
   const countryFlags = [
     ["финлянд","🇫🇮"],["польша","🇵🇱"],["нидерланд","🇳🇱"],["голланд","🇳🇱"],
