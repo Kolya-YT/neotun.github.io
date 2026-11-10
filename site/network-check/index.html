@@ -4,13 +4,13 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="theme-color" content="#050510">
-  <meta name="description" content="Проверка доступности локаций H1Cloud из вашей сети без подключения к сервису.">
+  <meta name="description" content="Проверка доступности серверных локаций из вашей сети без подключения к сервису.">
   <meta name="robots" content="index,follow">
   <link rel="canonical" href="https://neotun.ru/network-check/">
   <title>Проверка доступности локаций — NeoTUN</title>
   <link rel="icon" href="/img/favicon.png" type="image/png">
   <link rel="stylesheet" href="/css/style.css">
-  <link rel="stylesheet" href="/network-check/check.css?v=20261110-4">
+  <link rel="stylesheet" href="/network-check/check.css?v=20261110-5">
 </head>
 <body>
   <nav class="navbar" id="navbar">
@@ -46,7 +46,7 @@
     <section class="intro">
       <div class="eyebrow"><i></i> ДИАГНОСТИКА ДОСТУПНОСТИ</div>
       <h1>Проверка доступности локаций</h1>
-      <p>Проверка выполняется из вашего обычного интернет-соединения — без подключения к сервису. Каждая локация проверяется непосредственно из браузера, а рядом отображается задержка до неё.</p>
+      <p>Проверка выполняется из вашего обычного интернет-соединения — без подключения к сервису. Каждая локация проверяется непосредственно из браузера, а рядом отображается время ответа адреса из вашего браузера.</p>
     </section>
 
     <section class="actions">
@@ -54,7 +54,7 @@
         <button class="btn btn-primary" id="runCheck" type="button">Начать проверку</button>
         <button class="btn btn-secondary" id="copyResult" type="button" disabled>Скопировать результат</button>
       </div>
-      <div class="progress-label" id="progressLabel">Загрузка списка…</div>
+      <div class="progress-label" id="progressLabel">Проверка не запущена</div>
     </section>
 
     <div class="progress-track" aria-hidden="true"><div id="progressBar"></div></div>
@@ -62,13 +62,13 @@
     <section class="stats" aria-live="polite">
       <article class="stat"><strong class="green" id="availableCount">—</strong><span>доступно</span></article>
       <article class="stat"><strong class="red" id="unavailableCount">—</strong><span>недоступно</span></article>
-      <article class="stat"><strong id="averagePing">—<small> мс</small></strong><span>средний пинг</span></article>
+      <article class="stat"><strong id="averagePing">—<small> мс</small></strong><span>среднее время отклика</span></article>
       <article class="stat"><strong class="ip-value" id="visitorIp">Определяется…</strong><span>ваш IP</span></article>
     </section>
 
     <section class="results" aria-label="Результаты проверки">
       <div class="results-heading"><span>Локации</span><span id="listMeta">—</span></div>
-      <div id="nodeList" class="node-list"><div class="empty-state">Получаем актуальный список локаций…</div></div>
+      <div id="nodeList" class="node-list"><div class="empty-state">Нажмите «Начать проверку», чтобы загрузить список и проверить локации.</div></div>
     </section>
 
     <p class="updated" id="updatedAt"></p>
@@ -83,6 +83,6 @@
     <footer>NeoTUN · Диагностика сети</footer>
   </main>
   <script src="/js/main.js" defer></script>
-  <script src="/network-check/check.js?v=20261110-4" defer></script>
+  <script src="/network-check/check.js?v=20261110-5" defer></script>
 </body>
 </html>
