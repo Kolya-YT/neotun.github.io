@@ -8,7 +8,7 @@
     average: $("averagePing"), ip: $("visitorIp"), list: $("nodeList"),
     meta: $("listMeta"), updated: $("updatedAt"), theme: $("themeToggle"),
   };
-  let nodes = [], results = [], visitorIp = "не определён", finished = false, running = false, statusSnapshot = null, checkStarted = false;
+  let nodes = [], results = [], visitorIp = "не определён", finished = false, running = false, loading = false, statusSnapshot = null, checkStarted = false;
 
   const countryFlags = [
     ["финлянд","🇫🇮"],["польша","🇵🇱"],["нидерланд","🇳🇱"],["голланд","🇳🇱"],
@@ -114,6 +114,7 @@
   };
   const run = async () => {
     if (running) return;
+    loading = false;
     running = true; finished = false; results = new Array(nodes.length);
     els.run.disabled = true; els.copy.disabled = true;
     els.progress.textContent = "Проверка…"; renderAll();
@@ -130,13 +131,15 @@
     renderAll();
   };
   const start = async () => {
-    if (running) return;
+    if (running || loading) return;
+    loading = true;
     els.run.disabled = true;
     els.run.textContent = checkStarted ? "Проверить ещё раз" : "Начать проверку";
     els.progress.textContent = "Загрузка списка…";
     try {
       await Promise.all([loadNodes(), loadVisitorIp()]);
       results = new Array(nodes.length); renderAll();
+      loading = false;
       await run();
     } catch (error) {
       const message = error?.name === "AbortError"
@@ -145,7 +148,7 @@
       els.list.innerHTML = `<div class="empty-state">${escapeHtml(message)}. Попробуйте загрузить список ещё раз.</div>`;
       els.progress.textContent = "Ошибка загрузки";
       els.run.textContent = checkStarted ? "Проверить ещё раз" : "Повторить загрузку";
-      els.run.disabled = false; running = false;
+      els.run.disabled = false; running = false; loading = false;
     }
   };
   const summary = () => {
@@ -178,7 +181,13 @@
     } catch { els.copy.textContent = "Не удалось скопировать"; }
   });
   els.run.addEventListener("click", start);
-  // The checker is dark-only and the site-native page has no themeToggle.
-  // Do not bind an event to a missing element: that would abort initialization.
-  start();
+  // The check starts only after an explicit click; opening the page is passive.
+  els.ip.textContent = "не определён";
+  els.progress.textContent = "Проверка не запущена";
+  els.list.innerHTML = '<div class="empty-state">Нажмите «Начать проверку», чтобы загрузить список и проверить локации.</div>';
+  els.meta.textContent = "Ожидает запуска";
+  els.available.textContent = "—";
+  els.unavailable.textContent = "—";
+  els.average.innerHTML = "—";
+  els.copy.disabled = true;
 })();
