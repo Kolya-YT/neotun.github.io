@@ -157,6 +157,7 @@
     } catch { els.copy.textContent = "Не удалось скопировать"; }
   });
   els.run.addEventListener("click", start);
-  els.theme.addEventListener("click", () => document.body.classList.toggle("light"));
+  // The checker is dark-only and the site-native page has no themeToggle.
+  // Do not bind an event to a missing element: that would abort initialization.
   start();
 })();
