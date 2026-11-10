@@ -25,6 +25,15 @@
     return match ? match[1] : "🌐";
   };
   const escapeHtml = (value) => String(value ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+  const fetchWithTimeout = async (url, options, timeoutMs) => {
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), timeoutMs);
+    try {
+      return await fetch(url, { ...options, signal: controller.signal });
+    } finally {
+      clearTimeout(timer);
+    }
+  };
   const timeoutFetch = async (url, timeoutMs) => {
     const controller = new AbortController();
     const timer = setTimeout(() => controller.abort(), timeoutMs);
@@ -75,14 +84,14 @@
   };
   const loadVisitorIp = async () => {
     try {
-      const response = await fetch("https://api.ipify.org?format=json", { cache: "no-store", signal: AbortSignal.timeout(5000) });
+      const response = await fetchWithTimeout("https://api.ipify.org?format=json", { cache: "no-store" }, 5000);
       const data = await response.json();
       visitorIp = data.ip || "не определён";
     } catch { visitorIp = "не удалось определить"; }
     els.ip.textContent = visitorIp;
   };
   const loadNodes = async () => {
-    const response = await fetch(`${API}?t=${Date.now()}`, { cache: "no-store", signal: AbortSignal.timeout(30000) });
+    const response = await fetchWithTimeout(`${API}?t=${Date.now()}`, { cache: "no-store" }, 12000);
     if (!response.ok) throw new Error("Не удалось загрузить список локаций");
     const data = await response.json();
     if (!data.ok || !Array.isArray(data.nodes)) throw new Error("Источник вернул некорректный список");
