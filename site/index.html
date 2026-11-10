@@ -76,25 +76,17 @@
 <main>
 
   <!-- ── HERO ─────────────────────────────────────────────────────────────── -->
-  <section class="hero">
+  <section class="hero cyber-hero">
     <div class="hero-bg"></div>
     <div class="hero-bg-extra"></div>
     <div class="hero-particles" id="hero-particles"></div>
+    <div class="cyber-grid" aria-hidden="true"></div>
 
-    <div class="container">
-      <div class="hero-inner">
-        <div class="hero-badge">
-          <span class="hero-badge-dot"></span>
-          Сервис защищённого доступа · работает прямо сейчас
-        </div>
-
-        <h1>NeoTUN — защищённый доступ<br>через <span class="highlight">совместимые приложения</span></h1>
-
-        <p class="hero-sub">
-          NeoTUN — самостоятельный сервис с собственным названием и сайтом neotun.ru. Он работает с совместимыми открытыми клиентами.
-          Получите подписку, выберите приложение и подключитесь за несколько шагов.
-        </p>
-
+    <div class="container cyber-hero-layout">
+      <div class="hero-inner cyber-hero-copy">
+        <div class="hero-badge"><span class="hero-badge-dot"></span> Сервис подписки NeoTUN</div>
+        <h1>Ваше подключение.<br><span class="highlight">Ваши правила.</span></h1>
+        <p class="hero-sub">Одна ссылка подписки для совместимых приложений на ваших устройствах. Управляйте доступом, выбирайте подходящую локацию и продлевайте подписку в личном кабинете.</p>
         <div class="hero-actions">
           <a href="login.html" class="btn btn-primary btn-lg hero-cta">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M13 2 3 14h9l-1 8 10-12h-9l1-8z"/></svg>
@@ -102,22 +94,41 @@
           </a>
           <a href="/download/" class="btn btn-outline btn-lg">
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12m0 0 4-4m-4 4-4-4M5 21h14"/></svg>
-            Скачать приложение
+            Выбрать приложение
           </a>
         </div>
-
-        <ul class="hero-perks">
-          <li><span class="hero-perk-ico">✓</span> Бесплатный тариф</li>
-          <li><span class="hero-perk-ico">✓</span> Авторизация через Telegram и Email</li>
-          <li><span class="hero-perk-ico">✓</span> Несколько стран</li>
-          <li><span class="hero-perk-ico">✓</span> Настройка за минуту</li>
+        <ul class="hero-perks cyber-perks">
+          <li><span class="hero-perk-ico">✓</span> Управление подпиской онлайн</li>
+          <li><span class="hero-perk-ico">✓</span> Windows, Android, iOS и другие платформы</li>
+          <li><span class="hero-perk-ico">✓</span> Поддержка через Telegram</li>
         </ul>
+        <a class="cyber-secondary-link" href="#how">Посмотреть, как это работает <span>↓</span></a>
+      </div>
+
+      <div class="cyber-visual" aria-label="Иллюстрация интерфейса NeoTUN">
+        <div class="cyber-orbit cyber-orbit-one"></div>
+        <div class="cyber-orbit cyber-orbit-two"></div>
+        <div class="cyber-device">
+          <div class="cyber-device-top"><span class="cyber-window-dots"><i></i><i></i><i></i></span><span>NEOTUN / CONTROL</span><span class="cyber-device-menu">•••</span></div>
+          <div class="cyber-device-brand"><span class="cyber-brand-mark">N</span><div><strong>NeoTUN</strong><small>Личный кабинет</small></div></div>
+          <div class="cyber-device-label">ВАША ПОДПИСКА</div>
+          <div class="cyber-subscription-card">
+            <div class="cyber-subscription-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7"><path d="M12 2 4 6v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V6l-8-4Z"/><path d="m9 12 2 2 4-4"/></svg></div>
+            <div><strong>Единая ссылка</strong><small>Импорт в совместимое приложение</small></div>
+            <span class="cyber-card-arrow">↗</span>
+          </div>
+          <div class="cyber-device-label">ВАШИ УСТРОЙСТВА</div>
+          <div class="cyber-platforms">
+            <span><b>▣</b> Windows</span><span><b>▯</b> Android</span><span><b>⌘</b> Apple</span>
+          </div>
+          <div class="cyber-device-footer"><span><i></i> Управление доступно онлайн</span><span>NEOTUN</span></div>
+        </div>
+        <div class="cyber-float cyber-float-top"><span class="cyber-float-icon">↗</span><div><strong>Просто начать</strong><small>Несколько шагов</small></div></div>
+        <div class="cyber-float cyber-float-bottom"><span class="cyber-float-icon">⌘</span><div><strong>Одна подписка</strong><small>Разные устройства</small></div></div>
+        <div class="cyber-visual-glow"></div>
       </div>
     </div>
-
-    <a href="#how" class="hero-scroll" aria-label="Прокрутить вниз">
-      <span></span>
-    </a>
+    <a href="#quick" class="hero-scroll" aria-label="Прокрутить вниз"><span></span></a>
   </section>
 
   <!-- ── QUICK ACTIONS ───────────────────────────────────────────────────── -->
@@ -163,7 +174,7 @@
     <div class="container">
       <div class="section-label"><span>Как начать</span></div>
       <h2 class="section-title">Пять шагов до подключения</h2>
-      <p class="section-sub">От входа в кабинет до свободного интернета — меньше минуты</p>
+      <p class="section-sub">От входа в кабинет до настройки подключения — несколько шагов</p>
 
       <div class="timeline">
         <div class="timeline-item reveal">
@@ -202,7 +213,7 @@
           <div class="timeline-node"><span>5</span></div>
           <div class="timeline-card">
             <h4>Подключитесь</h4>
-            <p>Выберите сервер и нажмите «Подключить». Готово — интернет работает.</p>
+            <p>Выберите сервер и нажмите «Подключить». Готово — приложение настроено.</p>
             <a class="timeline-link" href="/download/">Начать →</a>
           </div>
         </div>
@@ -390,7 +401,7 @@
         <div class="cta-inner">
           <div class="section-label" style="margin-bottom:18px"><span>Начать сейчас</span></div>
           <h2 class="cta-title">Готовы подключиться?</h2>
-          <p class="cta-sub">Получите подписку и выберите приложение — до свободного интернета меньше минуты.</p>
+          <p class="cta-sub">Получите подписку и выберите приложение — до настройки подключения несколько шагов.</p>
           <a href="login.html" class="btn btn-primary btn-lg cta-btn">Получить подписку →</a>
         </div>
       </div>
