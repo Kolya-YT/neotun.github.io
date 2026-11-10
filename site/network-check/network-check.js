@@ -1,139 +1,118 @@
-'use strict';
+/* NeoTUN Network Check — Globalping public API */
 (() => {
+  'use strict';
   const API = 'https://api.globalping.io/v1';
-  const form = document.getElementById('check-form');
-  const targetEl = document.getElementById('target');
-  const typeEl = document.getElementById('test-type');
-  const locationEl = document.getElementById('location');
-  const limitEl = document.getElementById('limit');
-  const runBtn = document.getElementById('run');
-  const progress = document.getElementById('progress');
-  const errorBox = document.getElementById('error');
-  const results = document.getElementById('results');
-  const progressTitle = document.getElementById('progress-title');
-  const progressState = document.getElementById('progress-state');
-  const progressMessage = document.getElementById('progress-message');
-  const progressBar = document.getElementById('progress-bar');
   const $ = id => document.getElementById(id);
-  let lastResult = null;
-  let pollTimer = null;
+  const form = $('check-form'), target = $('target'), type = $('test-type');
+  const region = $('location'), limit = $('limit'), run = $('run');
+  const progress = $('progress'), error = $('error'), results = $('results');
+  let lastResult = null, pollHandle = null;
 
-  function showError(message) {
-    errorBox.textContent = message;
-    errorBox.classList.remove('hidden');
-  }
-  function setProgress(title, state, message, percent) {
+  const esc = value => String(value ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+  function showError(message) { error.textContent = message; error.classList.remove('hidden'); }
+  function setProgress(title, status, message, pct) {
     progress.classList.remove('hidden');
-    progressTitle.textContent = title;
-    progressState.textContent = state;
-    progressMessage.textContent = message;
-    progressBar.style.width = percent + '%';
+    $('progress-title').textContent = title;
+    $('progress-state').textContent = status;
+    $('progress-message').textContent = message;
+    $('progress-bar').style.width = pct + '%';
   }
-  function validTarget(value) {
-    if (!value || value.length > 253 || /[\s/@?#]/.test(value)) return false;
-    if (/^(localhost|.*\.localhost|.*\.local)$/i.test(value)) return false;
+  function isPublicTarget(input) {
+    const value = input.trim();
+    if (!value || value.length > 253 || /[\s/@?#]/.test(value) || /(^|\.)localhost$/i.test(value) || /\.local$/i.test(value)) return false;
     if (/^(\d{1,3}\.){3}\d{1,3}$/.test(value)) {
-      const p = value.split('.').map(Number);
+      const p = value.split('.').map(Number), [a,b] = p;
       if (p.some(n => n > 255)) return false;
-      const [a,b] = p;
-      return !(a === 10 || a === 127 || a === 0 || (a === 169 && b === 254) || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168) || a >= 224);
+      return !(a === 0 || a === 10 || a === 127 || a >= 224 || (a === 169 && b === 254) || (a === 172 && b >= 16 && b <= 31) || (a === 192 && b === 168));
     }
     return /^[a-z0-9](?:[a-z0-9.-]*[a-z0-9])?$/i.test(value) && value.includes('.') && !value.includes('..');
   }
-  function locationValue() {
-    const value = locationEl.value;
-    if (value === 'world') return 'World';
-    return value;
+  async function request(path, options = {}) {
+    const response = await fetch(API + path, { ...options, headers: { 'Content-Type':'application/json', ...(options.headers || {}) } });
+    const data = await response.json().catch(() => ({}));
+    if (!response.ok) {
+      const detail = data.error?.message || data.message || (response.status === 429 ? 'Лимит запросов Globalping исчерпан. Попробуйте позже.' : 'Globalping вернул HTTP ' + response.status);
+      throw new Error(detail);
+    }
+    return { data, response };
   }
-  async function api(path, options) {
-    const response = await fetch(API + path, { ...options, headers: { 'Content-Type': 'application/json', ...(options?.headers || {}) } });
-    const body = await response.json().catch(() => ({}));
-    if (!response.ok) throw new Error(body.error?.message || body.message || 'Globalping API вернул HTTP ' + response.status);
-    return body;
+  function getMeasurementId(data, response) {
+    const header = response.headers.get('Location');
+    const fromHeader = header && header.match(/\/measurements\/([^/?#]+)/);
+    return data.id || (fromHeader && fromHeader[1]) || data.measurement?.id || null;
   }
-  function extractRows(data) {
-    const measurements = data.measurements || data.results || [];
-    return measurements.map(item => {
-      const probe = item.probe || item.location || {};
-      const result = item.result || {};
+  function normalize(data) {
+    const list = data.results || [];
+    return list.map(item => {
+      const p = item.probe || {}, r = item.result || {};
+      const status = r.status || item.status || 'unknown';
       let value = '—';
-      if (typeof result === 'string') value = result.slice(0, 160);
-      else if (result.avg !== undefined) value = result.avg + ' ms';
-      else if (result.rtt !== undefined) value = result.rtt + ' ms';
-      else if (result.status !== undefined) value = String(result.status);
-      else if (result.resolvedAddress) value = result.resolvedAddress;
-      else if (result.rawOutput) value = String(result.rawOutput).slice(0, 160);
-      const ok = item.status === 'finished' || item.status === 'success' || result.status === 'success';
-      return { probe: probe.name || probe.city || probe.network || 'Измерительная точка', country: probe.country || probe.region || 'Не указано', provider: probe.network || probe.asn || 'Globalping', value, ok, status: item.status || (ok ? 'success' : 'unknown') };
+      if (r.stats?.rtt?.avg != null) value = Number(r.stats.rtt.avg).toFixed(2) + ' ms';
+      else if (r.avg != null) value = r.avg + ' ms';
+      else if (r.resolvedAddress) value = r.resolvedAddress;
+      else if (r.rawOutput) value = String(r.rawOutput).split('\n').slice(0,2).join(' · ');
+      else if (r.status) value = r.status;
+      return {
+        point: [p.city,p.country].filter(Boolean).join(', ') || 'Измерительная точка',
+        country: p.country || '—',
+        network: p.network || (p.asn ? 'AS' + p.asn : '—'),
+        value, status, ok: status === 'finished' || status === 'success'
+      };
     });
   }
   function render(data) {
     lastResult = data;
-    const rows = extractRows(data);
-    const successes = rows.filter(x => x.ok).length;
-    const values = rows.map(x => Number.parseFloat(x.value)).filter(Number.isFinite);
-    const avg = values.length ? (values.reduce((a,b)=>a+b,0)/values.length).toFixed(1) : '—';
-    $('result-subtitle').textContent = targetEl.value + ' · ' + typeEl.value.toUpperCase() + ' · источник: Globalping';
+    const rows = normalize(data), finished = rows.filter(r => r.ok).length;
+    const avg = rows.map(r => parseFloat(r.value)).filter(Number.isFinite);
+    const average = avg.length ? (avg.reduce((a,b)=>a+b,0)/avg.length).toFixed(1) + ' ms' : '—';
+    $('result-subtitle').textContent = target.value + ' · ' + type.value.toUpperCase() + ' · Globalping';
     $('summary').innerHTML = [
-      ['Получено результатов', rows.length],
-      ['Успешные ответы', rows.length ? successes + '/' + rows.length : '—'],
-      ['Среднее значение', avg === '—' ? '—' : avg + ' ms']
-    ].map(([label,value]) => '<div class="metric"><small>' + label + '</small><strong>' + value + '</strong></div>').join('');
-    $('result-rows').innerHTML = rows.length ? rows.map(row => '<tr><td>' + escapeHtml(row.probe) + '</td><td>' + escapeHtml(row.country) + '</td><td>' + escapeHtml(String(row.provider)) + '</td><td>' + escapeHtml(row.value) + '</td><td><span class="status ' + (row.ok ? '' : 'bad') + '">' + escapeHtml(row.status) + '</span></td></tr>').join('') : '<tr><td colspan="5">Поставщик не вернул нормализованные результаты. Проверьте исходный ответ ниже.</td></tr>';
-    $('raw-output').textContent = JSON.stringify(data, null, 2);
+      ['Результатов',rows.length],
+      ['Успешно завершено',rows.length ? finished + ' / ' + rows.length : '—'],
+      ['Среднее значение',average]
+    ].map(([k,v])=>'<div class="metric"><small>'+esc(k)+'</small><strong>'+esc(v)+'</strong></div>').join('');
+    $('result-rows').innerHTML = rows.length ? rows.map(r=>'<tr><td>'+esc(r.point)+'</td><td>'+esc(r.country)+'</td><td>'+esc(r.network)+'</td><td>'+esc(r.value)+'</td><td><span class="status '+(r.ok?'':'bad')+'">'+esc(r.status)+'</span></td></tr>').join('') : '<tr><td colspan="5">Результатов пока нет. Откройте исходный ответ ниже.</td></tr>';
+    $('raw-output').textContent = JSON.stringify(data,null,2);
     results.classList.remove('hidden');
   }
-  function escapeHtml(value) {
-    return String(value).replace(/[&<>"']/g, char => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-  }
-  async function poll(id, deadline) {
-    const data = await api('/measurements/' + encodeURIComponent(id));
-    const status = data.status || 'in-progress';
-    if (status === 'finished' || status === 'failed' || status === 'error') {
-      const finalData = data.results ? data : await api('/measurements/' + encodeURIComponent(id) + '/results');
-      setProgress('Проверка завершена', status, 'Получены результаты внешних измерительных точек.', 100);
-      render(finalData);
-      runBtn.disabled = false;
-      runBtn.querySelector('span').textContent = 'Запустить снова';
-      return;
+  async function poll(id, started) {
+    const {data} = await request('/measurements/' + encodeURIComponent(id));
+    if (data.status && data.status !== 'in-progress') {
+      setProgress('Проверка завершена',data.status,'Результаты получены от внешних исполнителей.',100);
+      render(data); finish(); return;
     }
-    if (Date.now() > deadline) throw new Error('Проверка выполняется дольше ожидаемого. Попробуйте открыть её позже или запустить снова.');
-    const percent = Math.min(90, 20 + Math.floor((Date.now() - (deadline - 90000)) / 90000 * 65));
-    setProgress('Измерение выполняется', status, 'Ожидаем ответы от распределённых точек…', percent);
-    pollTimer = setTimeout(() => poll(id, deadline).catch(fail), 2500);
+    if (Date.now() - started > 90000) throw new Error('Превышено время ожидания. Проверьте позже или запустите новый тест.');
+    setProgress('Измерение выполняется','В работе','Получаем ответы из выбранных регионов…',Math.min(90,20 + Math.round((Date.now()-started)/90000*65)));
+    // Globalping documents polling at a maximum of two requests per second per measurement.
+    pollHandle = setTimeout(()=>poll(id,started).catch(fail),1200);
   }
-  function fail(error) {
-    clearTimeout(pollTimer);
-    runBtn.disabled = false;
-    runBtn.querySelector('span').textContent = 'Повторить проверку';
-    setProgress('Не удалось завершить проверку', 'Ошибка', 'Проверьте соединение и повторите запрос.', 100);
-    showError(error.message || 'Неизвестная ошибка API');
+  function finish() { clearTimeout(pollHandle); run.disabled=false; run.querySelector('span').textContent='Запустить снова'; }
+  function fail(err) {
+    finish();
+    setProgress('Проверка не завершена','Ошибка','Не удалось получить полный результат.',100);
+    showError(err.message || 'Неизвестная ошибка.');
   }
   form.addEventListener('submit', async event => {
     event.preventDefault();
-    clearTimeout(pollTimer);
-    errorBox.classList.add('hidden');
-    results.classList.add('hidden');
-    const target = targetEl.value.trim().replace(/^https?:\/\//i, '').replace(/\/$/, '');
-    if (!validTarget(target)) return showError('Укажите корректный публичный домен или публичный IPv4-адрес. Локальные и приватные адреса не допускаются.');
-    if (typeEl.value === 'dns' && /^\d/.test(target)) return showError('Для DNS-проверки укажите доменное имя.');
-    targetEl.value = target;
-    runBtn.disabled = true;
-    runBtn.querySelector('span').textContent = 'Запускаем…';
-    setProgress('Создание измерения', 'Подключение', 'Отправляем задание в Globalping…', 12);
+    clearTimeout(pollHandle); error.classList.add('hidden'); results.classList.add('hidden');
+    const value = target.value.trim().replace(/^https?:\/\//i,'').replace(/\/$/,'');
+    if (!isPublicTarget(value)) { showError('Укажите публичный домен или IPv4-адрес. Локальные и частные адреса не поддерживаются.'); return; }
+    if (type.value === 'dns' && /^\d/.test(value)) { showError('Для DNS-проверки укажите доменное имя.'); return; }
+    target.value = value; run.disabled=true; run.querySelector('span').textContent='Запускаем…';
+    setProgress('Создание измерения','Подключение','Отправляем задание в глобальную сеть измерений…',12);
     try {
-      const payload = { type: typeEl.value, target, locations: [{limit: Number(limitEl.value), magic: locationValue()}], measurementOptions: {protocol: 'ICMP'} };
-      const created = await api('/measurements', { method: 'POST', body: JSON.stringify(payload) });
-      const id = created.id || created.measurement?.id;
-      if (!id) throw new Error('Globalping не вернул идентификатор измерения.');
-      setProgress('Измерение создано', 'В очереди', 'ID измерения: ' + id + '. Ожидаем результаты…', 25);
-      await poll(id, Date.now() + 120000);
-    } catch (error) { fail(error); }
+      const payload = { type:type.value, target:value, locations:[{magic:region.value,limit:Number(limit.value)}], inProgressUpdates:true };
+      const {data,response} = await request('/measurements',{method:'POST',body:JSON.stringify(payload)});
+      const id = getMeasurementId(data,response);
+      if (!id) throw new Error('API не вернул ID измерения или Location header.');
+      setProgress('Задание принято','В очереди','ID измерения: '+id,25);
+      await poll(id,Date.now());
+    } catch (err) { fail(err); }
   });
   $('copy-results').addEventListener('click', async () => {
     if (!lastResult) return;
-    try { await navigator.clipboard.writeText(JSON.stringify(lastResult, null, 2)); $('copy-results').textContent = 'Скопировано ✓'; }
-    catch { $('copy-results').textContent = 'Копирование недоступно'; }
-    setTimeout(() => $('copy-results').textContent = 'Копировать JSON', 1800);
+    try { await navigator.clipboard.writeText(JSON.stringify(lastResult,null,2)); $('copy-results').textContent='Скопировано ✓'; }
+    catch { $('copy-results').textContent='Не удалось скопировать'; }
+    setTimeout(()=>$('copy-results').textContent='Копировать JSON',1600);
   });
 })();
