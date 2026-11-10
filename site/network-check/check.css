@@ -45,3 +45,22 @@
 @media(max-width:760px){.network-check-page{width:calc(100% - 32px);padding:46px 0 44px}.network-check-page .stats{grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.network-check-page .stat{padding:17px}.network-check-page .stat strong{font-size:22px}.network-check-page .actions{align-items:flex-start;flex-direction:column;margin-top:26px}.network-check-page .action-buttons{width:100%}.network-check-page .action-buttons .btn{flex:1;padding:12px 14px;font-size:13px}.network-check-page .progress-label{align-self:flex-end}.network-check-page .node-row{padding:13px 12px;gap:9px}.network-check-page .node-name{font-size:12px}.network-check-page .node-host{font-size:10px}.network-check-page .status{font-size:10px;padding:6px 8px}.network-check-page .node-ping{font-size:10px}.network-check-page .results-heading{padding:16px}.network-check-page .intro p{font-size:14px}}
 @media(max-width:380px){.network-check-page .action-buttons{flex-direction:column}.network-check-page .action-buttons .btn{width:100%}.network-check-page .stat .ip-value{font-size:14px}}
 @media(prefers-reduced-motion:reduce){.network-check-page *{animation:none!important;transition:none!important}}
+
+
+/* Layout guard: keep the checker aligned with the site's standard content grid. */
+main.network-check-page {
+  display: block;
+  flex: 1 0 auto;
+  width: min(1080px, calc(100% - 48px)) !important;
+  max-width: 1080px;
+  margin: 0 auto !important;
+  padding: 48px 0 64px !important;
+  box-sizing: border-box;
+}
+@media (max-width: 760px) {
+  main.network-check-page {
+    width: calc(100% - 32px) !important;
+    max-width: none;
+    padding: 34px 0 44px !important;
+  }
+}
