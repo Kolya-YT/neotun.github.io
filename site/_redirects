@@ -1,4 +1,5 @@
-# Netlify redirects — proxy API/auth to the Flask backend
+# Netlify redirects — proxy public H1Cloud feed, then app API/auth
+/api/h1cloud-status  /.netlify/functions/h1cloud-status  200
 /api/*      https://app.neotun.ru/api/:splat     200
 /auth/*     https://app.neotun.ru/auth/:splat     200
 /app/*      https://app.neotun.ru/app/:splat     200
