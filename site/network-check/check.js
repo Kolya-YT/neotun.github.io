@@ -91,7 +91,7 @@
     els.ip.textContent = visitorIp;
   };
   const loadNodes = async () => {
-    const response = await fetchWithTimeout(`${API}?t=${Date.now()}`, { cache: "no-store" }, 12000);
+    const response = await fetchWithTimeout(`${API}?t=${Date.now()}`, { cache: "no-store" }, 20000);
     if (!response.ok) throw new Error("Не удалось загрузить список локаций");
     const data = await response.json();
     if (!data.ok || !Array.isArray(data.nodes)) throw new Error("Источник вернул некорректный список");
@@ -139,7 +139,10 @@
       results = new Array(nodes.length); renderAll();
       await run();
     } catch (error) {
-      els.list.innerHTML = `<div class="empty-state">${escapeHtml(error.message || "Ошибка загрузки")}. Попробуйте обновить страницу.</div>`;
+      const message = error?.name === "AbortError"
+        ? "Сервер не успел ответить за 20 секунд"
+        : (error.message || "Ошибка загрузки");
+      els.list.innerHTML = `<div class="empty-state">${escapeHtml(message)}. Попробуйте загрузить список ещё раз.</div>`;
       els.progress.textContent = "Ошибка загрузки";
       els.run.textContent = checkStarted ? "Проверить ещё раз" : "Повторить загрузку";
       els.run.disabled = false; running = false;
