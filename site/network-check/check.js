@@ -150,14 +150,23 @@
   };
   const summary = () => {
     const available = results.filter(x => x?.state === "ok");
-    const unavailable = results.filter(x => x?.state === "bad");
+    const needsAttention = results.filter(x => x && x.state !== "ok");
     const pings = available.map(x => x.ping).filter(Number.isFinite);
+    const availableNames = nodes
+      .filter((node, index) => results[index]?.state === "ok")
+      .map((node, index) => {
+        const result = results[nodes.indexOf(node)];
+        return `${node.name} (${result.ping} мс)`;
+      });
+    const attentionNames = nodes
+      .filter((node, index) => results[index] && results[index].state !== "ok")
+      .map((node, index) => `${node.name} — ${results[nodes.indexOf(node)].label}`);
     const lines = [
-      `Проверка локаций H1Cloud — ${new Date().toISOString().replace("T"," ").slice(0,16)} UTC`,
+      `Проверка доступности NeoTUN — ${new Date().toISOString().replace("T"," ").slice(0,16)} UTC`,
       `IP: ${visitorIp}`,
-      `Доступно (${available.length}): ${nodes.filter((n,i)=>results[i]?.state==="ok").map((n,i)=>n.name + " (" + results[nodes.indexOf(n)].ping + " мс)").join(", ") || "нет"}`,
-      `Недоступно/проблемы (${unavailable.length}): ${nodes.filter((n,i)=>results[i]?.state==="bad" || results[i]?.state==="warn" || results[i]?.state==="unknown").map((n,i)=>n.name + " — " + results[nodes.indexOf(n)].label).join(", ") || "нет"}`,
-      `Средний пинг: ${pings.length ? Math.round(pings.reduce((a,b)=>a+b,0)/pings.length) + " мс" : "нет данных"}`,
+      `Доступно (${available.length}): ${availableNames.join(", ") || "нет"}`,
+      `Требуют внимания (${needsAttention.length}): ${attentionNames.join(", ") || "нет"}`,
+      `Средний пинг доступных локаций: ${pings.length ? Math.round(pings.reduce((a,b)=>a+b,0)/pings.length) + " мс" : "нет данных"}`,
     ];
     return lines.join("\n");
   };
