@@ -8,7 +8,7 @@
     average: $("averagePing"), ip: $("visitorIp"), list: $("nodeList"),
     meta: $("listMeta"), updated: $("updatedAt"), theme: $("themeToggle"),
   };
-  let nodes = [], results = [], visitorIp = "не определён", finished = false, running = false, statusSnapshot = null;
+  let nodes = [], results = [], visitorIp = "не определён", finished = false, running = false, statusSnapshot = null, checkStarted = false;
 
   const countryFlags = [
     ["финлянд","🇫🇮"],["польша","🇵🇱"],["нидерланд","🇳🇱"],["голланд","🇳🇱"],
@@ -82,7 +82,7 @@
     els.ip.textContent = visitorIp;
   };
   const loadNodes = async () => {
-    const response = await fetch(`${API}?t=${Date.now()}`, { cache: "no-store", signal: AbortSignal.timeout(12000) });
+    const response = await fetch(`${API}?t=${Date.now()}`, { cache: "no-store", signal: AbortSignal.timeout(30000) });
     if (!response.ok) throw new Error("Не удалось загрузить список локаций");
     const data = await response.json();
     if (!data.ok || !Array.isArray(data.nodes)) throw new Error("Источник вернул некорректный список");
@@ -115,19 +115,24 @@
       results[index] = classify(node, check);
       renderAll();
     });
-    finished = true; running = false; els.run.disabled = false;
+    finished = true; running = false; checkStarted = true; els.run.disabled = false;
+    els.run.textContent = "Проверить ещё раз";
     els.progress.textContent = `${nodes.length} / ${nodes.length}`;
     renderAll();
   };
   const start = async () => {
-    els.run.disabled = true; els.progress.textContent = "Загрузка списка…";
+    if (running) return;
+    els.run.disabled = true;
+    els.run.textContent = checkStarted ? "Проверить ещё раз" : "Начать проверку";
+    els.progress.textContent = "Загрузка списка…";
     try {
       await Promise.all([loadNodes(), loadVisitorIp()]);
       results = new Array(nodes.length); renderAll();
       await run();
     } catch (error) {
       els.list.innerHTML = `<div class="empty-state">${escapeHtml(error.message || "Ошибка загрузки")}. Попробуйте обновить страницу.</div>`;
-      els.progress.textContent = "Ошибка";
+      els.progress.textContent = "Ошибка загрузки";
+      els.run.textContent = checkStarted ? "Проверить ещё раз" : "Повторить загрузку";
       els.run.disabled = false; running = false;
     }
   };
