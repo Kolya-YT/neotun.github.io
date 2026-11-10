@@ -1,6 +1,6 @@
 (() => {
   "use strict";
-  const API = "/api/h1cloud-status";
+  const API = "https://app.neotun.ru/api/public/h1cloud-status";
   const $ = (id) => document.getElementById(id);
   const els = {
     run: $("runCheck"), copy: $("copyResult"), progress: $("progressLabel"),
