@@ -2272,3 +2272,18 @@ a:focus-visible, button:focus-visible {
   .cyber-orbit-one, .cyber-visual-glow, .cyber-float { animation: none !important; }
   *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; }
 }
+
+
+/* Cyber hero alignment overrides (the legacy hero was centered). */
+.cyber-hero { text-align: left; justify-content: flex-start; padding-left: 0; padding-right: 0; }
+.cyber-hero .cyber-hero-layout { width: 100%; }
+.cyber-hero .hero-inner { max-width: none; width: 100%; }
+.cyber-hero .hero-badge { margin-bottom: 0; }
+.cyber-hero .hero-actions { justify-content: flex-start; margin-bottom: 0; }
+.cyber-hero .hero-perks { justify-content: flex-start; max-width: none; margin-left: 0; margin-right: 0; }
+.cyber-hero .hero-scroll { left: 50%; }
+@media (max-width: 700px) {
+  .cyber-hero { text-align: left; }
+  .cyber-hero .hero-actions { justify-content: stretch; }
+  .cyber-hero .hero-perks { justify-content: flex-start; }
+}
