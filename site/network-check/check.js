@@ -169,7 +169,7 @@
       `IP: ${visitorIp}`,
       `Доступно (${available.length}): ${availableNames.join(", ") || "нет"}`,
       `Требуют внимания (${needsAttention.length}): ${attentionNames.join(", ") || "нет"}`,
-      `Средний пинг доступных локаций: ${pings.length ? Math.round(pings.reduce((a,b)=>a+b,0)/pings.length) + " мс" : "нет данных"}`,
+      `Среднее время отклика доступных локаций: ${pings.length ? Math.round(pings.reduce((a,b)=>a+b,0)/pings.length) + " мс" : "нет данных"}`,
     ];
     return lines.join("\n");
   };
